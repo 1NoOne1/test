@@ -28,8 +28,6 @@ Download/Clone the Repository and place the directory structure as shown above. 
 ```yaml
 [all:children]
 idrac_hosts
-#r620_servers
-#r730_servers
 
 #[r620_servers]
 #10.231.9.46 idrac_racname=r6c03-bmc model=620
@@ -38,22 +36,23 @@ idrac_hosts
 #10.231.9.40 idrac_racname=r6c12-bmc model=730
 
 [idrac_hosts]
-#r620_servers
-#r730_servers
-10.231.9.46 idrac_racname=r6c03-bmc model=620
-10.231.9.39 idrac_racname=r6c11-bmc model=730
+#idrachost1 ansible_host=<IP ADDRESS of idrachost1> idrac_racname=<idrachost1 name from DNS> model=<idrachost1 SERVER MODEL>
+#idrachost2 ansible_host=<IP ADDRESS of idrachost2> idrac_racname=<idrachost2 name from DNS> model=<idrachost2 SERVER MODEL>
+r6c03-bmc ansible_host=10.231.9.46 idrac_racname=r6c03-bmc model=620
+r6c11-bmc ansible_host=10.231.9.39 idrac_racname=r6c11-bmc model=730
 
 #[r620_servers:vars]
+#[r730_servers:vars]
 [idrac_hosts:vars]
-ansible_ssh_pass=******
-ansible_ssh_user=root
-idrac_dns1=10.231.0.101
-idrac_dns2=10.231.0.103
-idrac_gateway=10.231.9.1
-idrac_netmask=255.255.255.0
-idrac_domainname=encore-oam.com
-raid_force=false
-catalog_http_share=10.231.7.155/DellRepo/072017
+ansible_ssh_pass=<PASSWORD to ACCESS iDrac>
+ansible_ssh_user=root # will always be root for iDrac
+idrac_dns1=<PRIMARY DNS IP ADDRESS>
+idrac_dns2=<SECONDARY DNS IP ADDRESS>
+idrac_gateway=<GATEWAY of The iDRAC SUBNET>
+idrac_netmask=<NETMASK of The iDRAC SUBNET>
+idrac_domainname=<DOMAIN NAME>
+raid_force=<true/false> #true will enforce the raid reset
+catalog_http_share=<PATH of HTTP SERVER SHARE for DELL CATALOG> # 10.231.7.155/DellRepo/072017
 mgmt_vlanid=104
 mgmt_gateway=10.7.20.1
 mgmt_netmask=255.255.255.0
@@ -71,7 +70,7 @@ idrac_hosts     ---
 #10.231.9.46 idrac_racname=r6c03-bmc model=620  | --> host in-line variables that can be used in playbooks (applicable to only this host).
 
 [idrac_hosts]
-10.231.9.46 idrac_racname=r6c03-bmc model=620
+r6c11-bmc ansible_host=10.231.9.39 idrac_racname=r6c11-bmc model=730 | --> host in-line variables that can be used in playbooks (applicable to only this host).
 
 #[r620_servers:vars]     | --> variables that are defined for the host-group (applicable to all the hosts in this group). 
 [idrac_hosts:vars]                   
