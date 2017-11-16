@@ -105,11 +105,11 @@ ansible-playbook -i inventory/hosts playbooks/deploy_server_roles.yml
 
 Role                            | Description                                                                              
 --------------------------------|----------------------------------------------------------
-1 ../roles/Firmware_Updates    | Compare against the HTTP catalog and run any updates if available.
-2 ../roles/Raid_R620           | Reset the RAID forcefully and re-create RAID-1 across first two disks. Runs only when `raid_force` is set to `true` in `inventory/hosts`. Uses conditional : ` when: '(raid_force l bool) and (model is defined and model == 620)' ` .
+1 ../roles/Firmware_Updates     | Compare against the HTTP catalog and run any updates if available.
+2 ../roles/Raid_R620            | Reset the RAID forcefully and re-create RAID-1 across first two disks. Runs only when `raid_force` is set to `true` in `inventory/hosts`. Uses conditional : ` when: '(raid_force l bool) and (model is defined and model == 620)' ` .
 3 ../roles/Raid_R730   | Reset the RAID forcefully and re-create RAID-1 across first two disks. Convert any SSDs into Non-RAID. Runs only when `raid_force` is set to `true` in `inventory/hosts`. Uses conditional : ` when: '(raid_force 1 bool) and (model is defined and model == 730)'] `.
-4 ../roles/iDrac_Settings      | Modify/Update the iDrac settings using the variable values mentioned in `invenroty/hosts`.
-5 ../roles/iDrac_BIOS_Settings | Modify/Update the BIOS settings using the variable values mentioned in `invenroty/hosts`.
+4 ../roles/iDrac_Settings       | Modify/Update the iDrac settings using the variable values mentioned in `invenroty/hosts`.
+5 ../roles/iDrac_BIOS_Settings  | Modify/Update the BIOS settings using the variable values mentioned in `invenroty/hosts`.
 
  ```yaml
 +---------------------------------+--------------------------------------------------------------------------------------------+
@@ -218,7 +218,7 @@ mgmt_netmask=255.255.255.0
 ```yaml
 - name: Deploy Server Full Automation
   hosts: R620_hosts  # should match the host group that we set in the inventory/hosts files
-  #strategy: free      # runs in asynchronous fashion
+  #strategy: free      # so that all tasks gets executed in synchronous across all the 620s.
   user: root
   become: yes
   gather_facts: false
@@ -232,8 +232,11 @@ mgmt_netmask=255.255.255.0
     - role: ../roles/Firmware_Updates
     - role: ../roles/Raid_R620
       when: '(raid_force | bool) and (model is defined and model == 620)'
-    - role: ../roles/Raid_R730
-      when: '(raid_force | bool) and (model is defined and model == 730)'
+      
+# The below role will skip anyway as we don't have a model 730 defined in out inventory/hosts file. However, if you uncomment it then this will simply not flood out terminal with the skipped output.
+
+#    - role: ../roles/Raid_R730
+#     when: '(raid_force | bool) and (model is defined and model == 730)'
     - role: ../roles/iDrac_Settings
     - role: ../roles/iDrac_BIOS_Settings
 
@@ -241,40 +244,31 @@ mgmt_netmask=255.255.255.0
 
 #### Per Role Basis - Run only specific roles
 
-Explain what these tests test and why
+Sometimes, it would be useful to run only FW updates / or  only modify/update iDrac settings. We can achieve that as following: 
+
+* Modify the `playbooks/deploy_server_roles.yml` file, and comment out the roles which we don't want to be executed. The following playbook only runs with `roles/Firmware_Updates` and `roles/iDrac_Settings` on the hosts included in the `inventory/hosts`.
+
+```yaml
+- name: Deploy Server Full Automation
+  hosts: R620_hosts   # should match the host group that we set in the inventory/hosts files
+  strategy: free      #  runs in asynchronous fashion
+  user: root
+  become: yes
+  gather_facts: false
+  vars:
+    target_array:
+      - { target: 'BIOS.SysProfileSettings.SysProfile', job_target: 'Bios.Setup.1-1', target_set: 'SysProfile', value: 'PerfOptimized' }
+      - { target: 'bios.biosbootsettings.BootMode', job_target: 'Bios.Setup.1-1', target_set: 'BootMode', value: 'Bios' }
+      - { target: 'nic.nicconfig.1.LegacyBootProto', job_target: 'NIC.Integrated.1-1-1', target_set: 'LegacyBootProto', value: 'NONE' }
+      - { target: 'nic.nicconfig.3.LegacyBootProto', job_target: 'NIC.Integrated.1-3-1', target_set: 'LegacyBootProto', value: 'PXE' }
+  roles:
+    - role: ../roles/Firmware_Updates
+#    - role: ../roles/Raid_R620
+#      when: '(raid_force | bool) and (model is defined and model == 620)'
+#    - role: ../roles/Raid_R730
+#     when: '(raid_force | bool) and (model is defined and model == 730)'
+    - role: ../roles/iDrac_Settings
+#    - role: ../roles/iDrac_BIOS_Settings
 
 ```
-Give an example
-```
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
-## Authors
-
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone who's code was used
-* Inspiration
-* etc
-
 
