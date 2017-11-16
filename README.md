@@ -102,6 +102,15 @@ ansible-playbook -i inventory/hosts playbooks/deploy_server_roles.yml
 
 ```
 * The roles are :
+
+Role                            | Description                                                                              
+--------------------------------|----------------------------------------------------------
+1 ../roles/Firmware_Updates    | Compare against the HTTP catalog and run any updates if available.
+2 ../roles/Raid_R620           | Reset the RAID forcefully and re-create RAID-1 across first two disks. Runs only when `raid_force` is set to `true` in `inventory/hosts`. Uses conditional : ` when: '(raid_force l bool) and (model is defined and model == 620)' ` .
+3 ../roles/Raid_R730   | Reset the RAID forcefully and re-create RAID-1 across first two disks. Convert any SSDs into Non-RAID. Runs only when `raid_force` is set to `true` in `inventory/hosts`. Uses conditional : ` when: '(raid_force 1 bool) and (model is defined and model == 730)'] `.
+4 ../roles/iDrac_Settings      | Modify/Update the iDrac settings using the variable values mentioned in `invenroty/hosts`.
+5 ../roles/iDrac_BIOS_Settings | Modify/Update the BIOS settings using the variable values mentioned in `invenroty/hosts`.
+
  ```yaml
 +---------------------------------+--------------------------------------------------------------------------------------------+
 | Role                            | Description                                                                                |
@@ -114,7 +123,7 @@ ansible-playbook -i inventory/hosts playbooks/deploy_server_roles.yml
 +---------------------------------+--------------------------------------------------------------------------------------------+
 | 3. ../roles/Raid_R730           | Reset the RAID forcefully and re-create RAID-1 across first two disks.                     |
 |                                 | convert any SSDs into Non-RAID. Runs only when `raid_force` is set to true in              |
-|                                 | `inventory/hosts`. [when: '(raid_force | bool) and (model is defined and model == 730)'].  | 
+|                                 | `inventory/hosts`. [when: '(raid_force 1 bool) and (model is defined and model == 730)'].  | 
 +---------------------------------+--------------------------------------------------------------------------------------------+
 | 4. ../roles/iDrac_Settings      | Modify/Update the iDrac settings using the variable values mentioned in invenroty/hosts.   |
 +---------------------------------+--------------------------------------------------------------------------------------------+
