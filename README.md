@@ -179,10 +179,55 @@ mgmt_netmask=255.255.255.0
 
 #### Per Rack basis - either R620s or R730s.
 
-Explain what these tests test and why
+If we want to run only on the R620 (or) only on R730 models, then we can do the following: 
 
+* Modify the `inventory/hosts` file that includes the R620 / R730 Hosts.
+```yaml
+[all:children]
+R620_hosts
+
+[R620_hosts]
+r6c01-bmc 10.231.9.21 idrac_racname=r6c01-bmc model=620 # model parameter is necessary, If it is blank/not equals to 620 then RAID role won't be running on that host (coupled with raid_force variable host group vars below).
+r6c02-bmc 10.231.9.22 idrac_racname=r6c02-bmc model=620
+
+[R620_hosts:vars]
+ansible_ssh_pass=******
+ansible_ssh_user=root
+idrac_dns1=10.231.0.101
+idrac_dns2=10.231.0.103
+idrac_gateway=10.231.9.1
+idrac_netmask=255.255.255.0
+idrac_domainname=encore-oam.com
+raid_force=false # set to TRUE if you want to run RAID role on the host (coupled with model variable above).
+catalog_http_share=10.231.7.155/DellRepo/072017 # HTTP server where we host the Dell Firmware catalog Repository.
+mgmt_vlanid=104
+mgmt_gateway=10.7.20.1
+mgmt_netmask=255.255.255.0
 ```
-Give an example
+* Modify the `playbooks/deploy_server_roles.yml` file so that it runs in a linear and synchronous way. During this playbook LINEAR run, ansible waits for each task to be completed on all the hosts before it move on to execute the next task.
+
+```yaml
+- name: Deploy Server Full Automation
+  hosts: R620_hosts  # should match the host group that we set in the inventory/hosts files
+  #strategy: free      # runs in asynchronous fashion
+  user: root
+  become: yes
+  gather_facts: false
+  vars:
+    target_array:
+      - { target: 'BIOS.SysProfileSettings.SysProfile', job_target: 'Bios.Setup.1-1', target_set: 'SysProfile', value: 'PerfOptimized' }
+      - { target: 'bios.biosbootsettings.BootMode', job_target: 'Bios.Setup.1-1', target_set: 'BootMode', value: 'Bios' }
+      - { target: 'nic.nicconfig.1.LegacyBootProto', job_target: 'NIC.Integrated.1-1-1', target_set: 'LegacyBootProto', value: 'NONE' }
+      - { target: 'nic.nicconfig.3.LegacyBootProto', job_target: 'NIC.Integrated.1-3-1', target_set: 'LegacyBootProto', value: 'PXE' }
+  roles:
+    - role: ../roles/Firmware_Updates
+    - role: ../roles/Raid_R620
+      when: '(raid_force | bool) and (model is defined and model == 620)'
+    - role: ../roles/Raid_R730
+      when: '(raid_force | bool) and (model is defined and model == 730)'
+    - role: ../roles/iDrac_Settings
+    - role: ../roles/iDrac_BIOS_Settings
+
 ```
 
 #### Per Role Basis - Run only specific roles
