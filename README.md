@@ -67,12 +67,12 @@ idrac_hosts     ---
 #r730_servers   ---
 
 #[r620_servers]                                               
-#10.231.9.46 idrac_racname=r6c03-bmc model=620  | --> host in-line variables that can be used in playbooks.
+#10.231.9.46 idrac_racname=r6c03-bmc model=620  | --> host in-line variables that can be used in playbooks (applicable to only this host).
 
 [idrac_hosts]
 10.231.9.46 idrac_racname=r6c03-bmc model=620
 
-#[r620_servers:vars]     | --> variables that are defined for the host-group 
+#[r620_servers:vars]     | --> variables that are defined for the host-group (applicable to all the hosts in this group). 
 [idrac_hosts:vars]                   
 ansible_ssh_pass=******
 ansible_ssh_user=root
@@ -82,18 +82,31 @@ idrac_dns1=10.231.0.101
 ...
 ```
 ### Run the Playbook
-**Once we are done with defining all the required variables we are now ready to execute our playbook on the hosts by running the following command from the terminal**
+*Once we are done with defining all the required variables we are now ready to execute our playbook on the hosts by running the following command from the terminal*
 
 ```
 ansible-playbook -i inventory/hosts playbooks/deploy_server_roles.yml
 ```
-`playbooks/deploy_server_roles.yml` : contains the following roles.
-1. `../roles/Firmware_Updates` : => Compare against the HTTP catalog and run any updates if available.
-2. `../roles/Raid_R620`        : => Reset the RAID forcefully and re-create RAID-1 across first two disks. Runs only when `raid_force` is set to true in `inventory\hosts` [when: '(raid_force | bool) and (model is defined and model == 620)'].
-3. `../roles/Raid_R730`        : => Reset the RAID forcefully and re-create RAID-1 across first two disks and convert any SSDs into Non-RAID. Runs only when `raid_force` is set to true in `inventory\hosts` [when: '(raid_force | bool) and (model is defined and model == 730)'].       
-4. `../roles/iDrac_Settings`   : => Modify/Update the iDrac settings using the variable values mentioned in invenroty/hosts.
-5. `../roles/iDrac_BIOS_Settings` " => Modify/Update the BIOS settings using the variable values mentioned in invenroty/hosts.
+* **deploy_server_roles.yml** `=>` which holds the following five roles that gets executed accordingly. If you don't want a role to be executed then simply comment out that line in the YAML file.
+
 ```
+  roles:
+#    - role: ../roles/Firmware_Updates
+    - role: ../roles/Raid_R620
+      when: '(raid_force | bool) and (model is defined and model == 620)'
+#    - role: ../roles/Raid_R730
+#      when: '(raid_force | bool) and (model is defined and model == 730)'
+    - role: ../roles/iDrac_Settings
+    - role: ../roles/iDrac_BIOS_Settings
+
+```
+
+ 1. `../roles/Firmware_Updates` : => Compare against the HTTP catalog and run any updates if available.
+ 2. `../roles/Raid_R620`        : => Reset the RAID forcefully and re-create RAID-1 across first two disks. Runs only when `raid_force` is set to true in `inventory\hosts` [when: '(raid_force | bool) and (model is defined and model == 620)'].
+ 3. `../roles/Raid_R730`        : => Reset the RAID forcefully and re-create RAID-1 across first two disks and convert any SSDs into Non-RAID. Runs only when `raid_force` is set to true in `inventory\hosts` [when: '(raid_force | bool) and (model is defined and model == 730)'].       
+ 4. `../roles/iDrac_Settings`   : => Modify/Update the iDrac settings using the variable values mentioned in invenroty/hosts.
+ 5. `../roles/iDrac_BIOS_Settings` " => Modify/Update the BIOS settings using the variable values mentioned in invenroty/hosts.
+ ```
 +---------------------------------+--------------------------------------------------------------------------------------------+
 | Role                            | Description                                                                                |
 +=================================+============================================================================================+
