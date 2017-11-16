@@ -133,9 +133,9 @@ Let's say we have a rack containing both R620 and R730 models and we would like 
 idrac_hosts
 
 [idrac_hosts]
-r6c01-bmc 10.231.9.21 idrac_racname=r6c01-bmc model=620 # model parameter is necessary, If it is blank/not equals to 620 then RAID role won't be running on that host (coupled with raid_force variable above).
+r6c01-bmc 10.231.9.21 idrac_racname=r6c01-bmc model=620 # model parameter is necessary, If it is blank/not equals to 620 then RAID role won't be running on that host (coupled with raid_force variable host group vars below).
 r6c02-bmc 10.231.9.22 idrac_racname=r6c02-bmc model=620
-r6c03-bmc 10.231.9.23 idrac_racname=r6c03-bmc model=730 # model parameter is necessary, If it is blank/not equals to 730 then RAID role won't be running on that host (couple with raid_force variable above).
+r6c03-bmc 10.231.9.23 idrac_racname=r6c03-bmc model=730 # model parameter is necessary, If it is blank/not equals to 730 then RAID role won't be running on that host (couple with raid_force variable in host group vars below).
 r6c04-bmc 10.231.9.23 idrac_racname=r6c03-bmc model=730
 
 [idrac_hosts:vars]
@@ -152,7 +152,7 @@ mgmt_vlanid=104
 mgmt_gateway=10.7.20.1
 mgmt_netmask=255.255.255.0
 ```
-* Modify the `playbooks/deploy_server_roles.yml` file so that it runs asynchronously[http://docs.ansible.com/ansible/latest/playbooks_strategies.html].
+* Modify the `playbooks/deploy_server_roles.yml` file so that it runs [asynchronously](http://docs.ansible.com/ansible/latest/playbooks_strategies.html), this way the we can eliminate host dependency on each other. 
 ```yaml
 - name: Deploy Server Full Automation
   hosts: idrac_hosts  # should match the host group that we set in the inventory/hosts files
