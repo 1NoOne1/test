@@ -112,23 +112,8 @@ ansible-playbook -i inventory/hosts playbooks/deploy_server_roles.yml
 | ../roles/iDrac_BIOS_Settings    | Modify/Update the BIOS settings using the variable values mentioned in invenroty/hosts.    |
 +---------------------------------+--------------------------------------------------------------------------------------------+
 ```
-```
-Give the example
-```
 
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
+### Per Rack basis - Rack having 620s and 730s
 
 Explain what these tests test and why
 
@@ -136,7 +121,7 @@ Explain what these tests test and why
 Give an example
 ```
 
-### And coding style tests
+### Per Rack basis - either R620s or R730s.
 
 Explain what these tests test and why
 
@@ -144,9 +129,13 @@ Explain what these tests test and why
 Give an example
 ```
 
-## Deployment
+## Per Role Basis - Run only specific roles
 
-Add additional notes about how to deploy this on a live system
+Explain what these tests test and why
+
+```
+Give an example
+```
 
 ## Built With
 
