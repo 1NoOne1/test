@@ -1,19 +1,43 @@
-# Dell PowerEdge 620/730 Servers – Update iDrac Firm Ware/Settings/Device Drivers using RACADM.
+## Dell PowerEdge 620/730 Servers – Update iDrac Firm Ware/Settings/Device Drivers using RACADM and Ansible.
 
-This will update Firmware/Device Drivers, change/modify iDrac/Bios Settings using Racadm command line tool on Dell PowerEdge 620 and 730xd models. We will connect to the local racadm which resides in iDrac and execute the required commands using the Ansible RAW module. We use HTTP repository share from which we will update the recommended updates and these updates were created in the form a catalog using Dell Repository Manager.  
+The System/Host preparation involves configuring iDrac settings, Bios settings, updating any system settings. It also make sure to install the latest BIOS, device drivers and systems management firmware on the system. Finally, we would be able to boot the system to PXE boot to install the required Operating system.
 
-## Getting Started
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
-
+We automated this process using `Ansible RAW` module and the `Local iDrac RACADM` commndline tool. we also use HTTP repository share from which we will update the recommended updates and these updates were created in the form a catalog using Dell Repository Manager.
+This will update Firmware/Device Drivers, change/modify iDrac/Bios Settings using Racadm command line tool on Dell PowerEdge 620 and 730xd models. We will connect to the local racadm which resides in iDrac and execute the required commands using the Ansible RAW module.    
 ### Prerequisites
+1. An Existing DNS server should have updated with DNS records for all the iDrac hosts. 
+2. Need a system/VM running with linux OS.
+ ``` 
+ CentOS Linux release 7.0.1406 (Core) or above available.
+ ```
+3. Python should be installed.
+```
+[ansible@test-vm ~]$ python --version
+Python 2.7.5
+```
+4. [Ansible](http://docs.ansible.com/intro_installation.html) should be installed.
+```
+[ansible@test-vm ~]$ ansible --version
+ansible 2.3.1.0
+  config file = /home/ansible/ansible.cfg
+  configured module search path = Default w/o overrides
+  python version = 2.7.5 (default, Jun 17 2014, 18:11:42) [GCC 4.8.2 20140120 (Red Hat 4.8.2-16)]
+```
 
-* You should a system/VM running linux with --  `CentOS Linux release 7.0.1406 (Core) or above available`.
-* Install Python --version:  `python version = 2.7.5.`
-* [Ansible](http://docs.ansible.com/intro_installation.html) should be installed --version:  `ansible 2.3.1.0`.
-* Pip (Python package Index) should installed using `epel-release`. --version: `pip 8.1.2 from /usr/lib/python2.7/site-packages (python 2.7)`.
-* Jinja2 should be installed using `pip install jija2`. --version: `Jinja2 (2.7.2)`.
-* A `HTTP server` should be setup, running and should be accessible to iDrac hosts. This is the location where we host Dell FW updates as HTTP share from which iDrac hosts would be able to download the required Firmware/device drivers.
+5. Pip (Python package Index) should installed using `epel-release`. 
+```
+[ansible@test-vm ~]$ pip --version
+pip 8.1.2 from /usr/lib/python2.7/site-packages (python 2.7)
+```
+6. Jinja2 should be installed using `pip install jija2`. 
+```
+[ansible@test-vm ~]$pip list
+..
+Jinja2 (2.7.2)
+..
+..
+```
+7. A `HTTP server` should be setup, running and should be accessible to iDrac hosts. This is the location where we host Dell FW updates as HTTP share from which iDrac hosts would be able to download the required Firmware/device drivers.
  
 ### Installing
 Download/Clone the Repository and place the directory structure as shown above. We are following the directory structure that is mentioned in anisble best practices. Please follow the below links for more understanding on how ansible directory structure works:
