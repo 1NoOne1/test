@@ -166,8 +166,8 @@ idrac_hosts
 
 [idrac_hosts]
 r6c01-bmc 10.231.9.21 idrac_racname=r6c01-bmc model=620 # model parameter is necessary, If it is blank/not equals to 620 then RAID role won't be running on that host (coupled with raid_force variable host group vars below).
-r6c02-bmc 10.231.9.22 idrac_racname=r6c02-bmc model=620
-r6c03-bmc 10.231.9.23 idrac_racname=r6c03-bmc model=730 # model parameter is necessary, If it is blank/not equals to 730 then RAID role won't be running on that host (couple with raid_force variable in host group vars below).
+r6c02-bmc ansible_host=10.231.9.22 idrac_racname=r6c02-bmc model=620
+r6c03-bmc ansible_host=10.231.9.23 idrac_racname=r6c03-bmc model=730 # model parameter is necessary, If it is blank/not equals to 730 then RAID role won't be running on that host (couple with raid_force variable in host group vars below).
 r6c04-bmc 10.231.9.23 idrac_racname=r6c03-bmc model=730
 
 [idrac_hosts:vars]
@@ -219,8 +219,8 @@ If we want to run only on the R620 (or) only on R730 models, then we can do the 
 R620_hosts
 
 [R620_hosts]
-r6c01-bmc 10.231.9.21 idrac_racname=r6c01-bmc model=620 # model parameter is necessary, If it is blank/not equals to 620 then RAID role won't be running on that host (coupled with raid_force variable host group vars below).
-r6c02-bmc 10.231.9.22 idrac_racname=r6c02-bmc model=620
+r6c01-bmc ansible_host=10.231.9.21 idrac_racname=r6c01-bmc model=620 # model parameter is necessary, If it is blank/not equals to 620 then RAID role won't be running on that host (coupled with raid_force variable host group vars below).
+r6c02-bmc ansible_host=10.231.9.22 idrac_racname=r6c02-bmc model=620
 
 [R620_hosts:vars]
 ansible_ssh_pass=******
