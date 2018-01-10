@@ -20,11 +20,36 @@
 * deploy_vcsa.yml
 * ovf_deploy.yml
 
-any package that is not available on the template. We created a user called `ansible` and placed the required directory structure 
-that is required for ansible program under user `ansible` home directory `/home/ansible/`. 
+> **Please copy `vars` directory (which contains the following files) in to Ansible control machine location `/home/ansible/vars/`. [Do not replace the existing files.]** [ Download them from the dal01kck0001 server.]
+* vars/python2714.yml `->` /home/ansible/vars/
+* nfs-exports.yml
+* bootstrap_esxi_idrac.yml
+* deployvcsa.yml
+* ovf_deploy.yml
 
-### Setup the VM in vCenter using OVF Template:
-**If you are using stand-alone vSphere Client application, we can deploy VM as follows:**
+**Place the contents of `hosts_prod` in to the existing file `/home/ansible/inventory/hosts_prod` file. [Do not Replace the existing file contents. Instead add the content as shown in the file to the respective places, If the below lines doesn't exist.]**
+
+```yaml
+[all:children]
+r620_servers
+r730_servers
+mgmt_servers
+bootstrap_host   <-- add this line
+
+[bootstrap_host]  <-- add this line
+r60210c14-bmc ansible_host=10.231.9.28 idrac_racname=r60210c14-bmc model=630   <-- add this line
+
+[bootstrap_host:vars]                 <-- add this line
+ansible_ssh_pass=<IDRAC_PASSWORD>     <-- add this line
+ansible_ssh_user=root                 <-- add this line
+
+[mgmt_servers]
+..
+..
+
+
+```
+
 * Open vCenter Client Application, Enter the credentials and into it.
 * Click on `File -> Deploy OVF Template`. In the Deploy OVF Template dialog, choose the appropriate `Source file, Name of the VM and 
 Host/Cluster/Resource pool` on which the VM should be deployed.
