@@ -2,12 +2,23 @@
 
 > **Make sure the Anisble control machine can reach internet (because we need to install some yum packages). [A working yum proxy is good enough, If so update the yum.conf to use the proxy ].**
 
-> **We need to have the following ISO files. Download them from the dal01kck0001 server. Please donwload them to the Ansible control machine `/tmp` directory.**
+> **We need to have the following ISO files. [ Download them from the dal01kck0001 server ]. Please download them to the Ansible control machine `/tmp` directory.**
 * Dell Esxi 6.0 OS : `VMware-VMvisor-Installer-6.0.0.update03-5224934.x86_64-DellEMC_Customized-A03.iso`
 * VCenter 6.0 (VCSA) : `VMware-VCSA-all-6.0.0-5326177.iso`
 
+> **Please place all the below directories in to Ansible control machine location `/home/ansible/roles/`. [Do not replace the existing roles.]** [ Download them from the dal01kck0001 server.]
+* python2714
+* nfs-server
+* bootstrap_esxi_idrac
+* deployvcsa
+* ovf_deploy
 
-
+> **Please place all the below playbooks in to Ansible control machine location `/home/ansible/playbooks/`. [Do not replace the existing playbooks.]** [ Download them from the dal01kck0001 server.]
+* python_2714.yml
+* nfs.yml
+* bootstrap_esxihost.yml
+* deploy_vcsa.yml
+* ovf_deploy.yml
 
 any package that is not available on the template. We created a user called `ansible` and placed the required directory structure 
 that is required for ansible program under user `ansible` home directory `/home/ansible/`. 
