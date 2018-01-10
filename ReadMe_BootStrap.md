@@ -50,7 +50,7 @@ ansible_ssh_user=root                 <-- add this line
 
 ```
 
-**Change the `/home/ansible/vars/nfs-exports.yml` file to reflect the IP Addresses from where you can access the NFS-Share.**
+**Change the `/home/ansible/vars/nfs-exports.yml` file to reflect the IP Addresses from where you can access the NFS-Share. This is to share the ESXI ISO for boot strap over the iDrac.**
 ```yml
 nfs_exports: [
 "/var/tmp/nfs_esxi_share  <IDRAC IP ADDRESS RANGE/SUBNET>(rw,sync,no_root_squash,no_subtree_check)",
@@ -59,7 +59,7 @@ nfs_exports: [
 
 ```
 
-**Change the `/home/ansible/vars/bootstrap_esxi_idrac.yml` file to reflect the NFS SHARE IP and BOOT STRAP Host details. **
+**Change the `/home/ansible/vars/bootstrap_esxi_idrac.yml` file to reflect the NFS SHARE IP and BOOT STRAP Host details. These details will be used in creating the ESXI boot strap ISO. These parameters are used to access the ESXi Host once the installation is done.**
 
 ```yml
 nfs_share_ipaddr: '<NFS SHARE HOST IP[which is the IP of Ansible Conotrol Machine]>'
@@ -76,6 +76,9 @@ bs_mgmt_portgroup: '<MANAGEMENT_PORTGROUP>'
 bs_mgmt_passwd: '<BOOT_STRAP_HOST_PASSWORD TO SET>'
 
 ```
+
+**Change the values in the `/home/ansible/vars/deployvcsa.yml` file contents to reflect the parameters that are required for the VCSA installation. Thease are the parameters that are used to access the `vCenter` once it is up and running.**
+
 
 
 * Open vCenter Client Application, Enter the credentials and into it.
