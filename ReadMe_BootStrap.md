@@ -50,6 +50,34 @@ ansible_ssh_user=root                 <-- add this line
 
 ```
 
+**Change the `/home/ansible/vars/nfs-exports.yml` file to reflect the IP Addresses from where you can access the NFS-Share.**
+```yml
+nfs_exports: [
+"/var/tmp/nfs_esxi_share  <IDRAC IP ADDRESS RANGE/SUBNET>(rw,sync,no_root_squash,no_subtree_check)",
+"/var/tmp/nfs_esxi_share  10.231.7.0/24(rw,sync,no_root_squash,no_subtree_check)",
+]
+
+```
+
+**Change the `/home/ansible/vars/bootstrap_esxi_idrac.yml` file to reflect the NFS SHARE IP and BOOT STRAP Host details. **
+
+```yml
+nfs_share_ipaddr: '<NFS SHARE HOST IP[which is the IP of Ansible Conotrol Machine]>'
+
+bs_mgmt_host: '<BOOT_STRAP_HOSTNAME>'
+bs_mgmt_ip: '<BOOT_STRAP_MANAGEMENT_IP>'
+bs_mgmt_mask: '255.255.255.0'
+bs_mgmt_gw: '<BOOT_STRAP_MANAGEMENT_GATEWAY>'
+bs_mgmt_domain: '<DOMAIN NAME>'
+bs_mgmt_pdns: '<PRIMARY DNS>'
+bs_mgmt_sdns: '<SECONDARY DNS>'
+bs_mgmt_vlan: <MANAGEMENT VLAN>
+bs_mgmt_portgroup: '<MANAGEMENT_PORTGROUP>'
+bs_mgmt_passwd: '<BOOT_STRAP_HOST_PASSWORD TO SET>'
+
+```
+
+
 * Open vCenter Client Application, Enter the credentials and into it.
 * Click on `File -> Deploy OVF Template`. In the Deploy OVF Template dialog, choose the appropriate `Source file, Name of the VM and 
 Host/Cluster/Resource pool` on which the VM should be deployed.
