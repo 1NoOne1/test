@@ -1,6 +1,7 @@
-## Deploy a CentOS VM from the OVA template in vCenter: 
+## Create a boot strap server which will host Esxi6.0 as well as vCenter6.0 
 
-> The OVA template that we provided will have all the required and necessary packages/components in place. Please feel free to install 
+> **Make sure the Anisble control machine can reach internet (because we need to install some yum packages). [A working yum proxy is good enough].
+
 any package that is not available on the template. We created a user called `ansible` and placed the required directory structure 
 that is required for ansible program under user `ansible` home directory `/home/ansible/`. 
 
