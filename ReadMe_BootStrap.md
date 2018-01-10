@@ -101,16 +101,16 @@ refer to the vars/deployvcsa.yml above.
 
 ```yaml
 # [To RUN pyhton update]
-ansible-playbook -i inventory/hosts_prod playbooks/python_2714.yml
+[ansible@vcnms-lab-linux ~]$ ansible-playbook -i inventory/hosts_prod playbooks/python_2714.yml
 
 # [To RUN nfs server utilities]
-ansible-playbook -i inventory/hosts_prod playbooks/nfs.yml
+[ansible@vcnms-lab-linux ~]$ ansible-playbook -i inventory/hosts_prod playbooks/nfs.yml
 
 # [To RUN on RACK6 R620 servers]
-ansible-playbook -i inventory/hosts_prod playbooks/bootstrap_esxihost.yml
+[ansible@vcnms-lab-linux ~]$ ansible-playbook -i inventory/hosts_prod playbooks/bootstrap_esxihost.yml
 
 # [To RUN on RACK7 R620 servers]
-ansible-playbook -i inventory/hosts_prod playbooks/deploy_vcsa.yml
+[ansible@vcnms-lab-linux ~]$ ansible-playbook -i inventory/hosts_prod playbooks/deploy_vcsa.yml
 
 ```
 
