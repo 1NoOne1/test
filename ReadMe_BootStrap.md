@@ -1,6 +1,13 @@
 ## Create a boot strap server which will host Esxi6.0 as well as vCenter6.0 
 
-> **Make sure the Anisble control machine can reach internet (because we need to install some yum packages). [A working yum proxy is good enough].**
+> **Make sure the Anisble control machine can reach internet (because we need to install some yum packages). [A working yum proxy is good enough, If so update the yum.conf to use the proxy ].**
+
+> **We need to have the following ISO files. Download them from the dal01kck0001 server. Please donwload them to the Ansible control machine `/tmp` directory.**
+* Dell Esxi 6.0 OS : `VMware-VMvisor-Installer-6.0.0.update03-5224934.x86_64-DellEMC_Customized-A03.iso`
+* VCenter 6.0 (VCSA) : `VMware-VCSA-all-6.0.0-5326177.iso`
+
+
+
 
 any package that is not available on the template. We created a user called `ansible` and placed the required directory structure 
 that is required for ansible program under user `ansible` home directory `/home/ansible/`. 
